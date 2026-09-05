@@ -148,6 +148,52 @@ function renderWorkers() {
   qs('#workerCount').textContent = `${p.permanentBuilders} permanent${p.activeExtra.length ? ` + ${p.activeExtra.length} temporary` : ''}`;
 }
 
+// Heroes run in parallel with the builder phases. They are not themselves
+// Phase 1 completion work, even though Phase 1 reserves one builder for them.
+function currentPhaseTaskCount(model, n) {
+  return model.builderSchedule.lanes
+    .flatMap(lane => lane.queue)
+    .filter(task => task.type !== 'hero' && task.phase === n).length;
+}
+
+function renderMilestones() {
+  const m = state.model;
+  const foundationTasks = m.builderSchedule.lanes
+    .flatMap(lane => lane.queue)
+    .filter(task => task.type !== 'hero' && task.phase === 1);
+  const foundationComplete = m.phases?.[0]?.progress?.pct === 100;
+  const foundationEnd = foundationComplete
+    ? Date.now()
+    : Math.max(Date.now(), ...foundationTasks.map(task => task.end));
+  const items = [
+    ['⚔️', 'Foundation', foundationEnd],
+    ['👑', 'Heroes max', m.heroEnd],
+    ['⚗️', 'Lab max', m.labSchedule.end],
+    ['🛡️', 'Defenses max', m.builderEnd],
+    ['🏛️', 'TH ready', m.thReady]
+  ];
+  qs('#milestoneGrid').innerHTML = items.map(([icon, name, time]) => `
+    <div class="milestone">
+      <span class="icon">${icon}</span>
+      <strong>${name}</strong>
+      <time>${foundationComplete && name === 'Foundation' ? 'Complete' : fmtDate(time)}</time>
+      <div class="small muted">${foundationComplete && name === 'Foundation' ? 'Builder foundation done' : fmtDuration(Math.max(0, time - Date.now()))}</div>
+    </div>`).join('');
+}
+
+function renderPlan() {
+  const m = state.model;
+  if (!m) return;
+  qs('#phaseStack').innerHTML = m.phases.map(ph => `<div class="phase-card"><div class="phase-card-head"><div><div class="eyebrow">Phase ${ph.n}</div><h2>${ph.name}</h2></div><span class="phase-badge">${ph.progress.pct}% · ${plural(currentPhaseTaskCount(m, ph.n), 'upgrade')} left</span></div><div class="phase-card-body">${ph.description}</div></div>`).join('');
+  const tasks = m.builderSchedule.lanes.flatMap(lane => lane.queue.map(task => ({...task, lane: `Builder ${lane.id}`}))).sort((a,b) => a.start-b.start).slice(0,24);
+  const lab = m.labSchedule.queue.slice(0,8).map(task => ({...task,lane:'Laboratory'}));
+  const pets = m.petSchedule.queue.slice(0,5).map(task => ({...task,lane:'Pet House'}));
+  qs('#queuePreview').innerHTML = [...tasks,...lab,...pets].sort((a,b) => a.start-b.start).map(task => {
+    const track = task.type === 'hero' ? ' · Hero track' : (task.phase ? ` · Phase ${task.phase}` : '');
+    return `<div class="queue-card"><strong>${escapeHtml(task.entity.name)} ${task.from} → ${task.to}</strong><div class="meta">${task.lane} · ${fmtDateTime(task.start)} · ${fmtDuration(task.duration)}${track}</div></div>`;
+  }).join('') || '<div class="empty-card compact">No future tasks remaining.</div>';
+}
+
 // If cached data made the original render finish unusually quickly, re-render once with the fixes.
 queueMicrotask(() => {
   if (state?.data && state?.village && typeof render === 'function') render();
