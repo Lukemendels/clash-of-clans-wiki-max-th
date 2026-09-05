@@ -1,5 +1,5 @@
-const CACHE = 'max-th-v1';
-const SHELL = ['./', './index.html', './app.css', './app-data.js', './app-planner.js', './app-ui.js', './manifest.webmanifest', './assets/icon.svg'];
+const CACHE = 'max-th-v2';
+const SHELL = ['./', './index.html', './app.css', './app-fixes.css', './app-data.js', './app-planner.js', './app-ui.js', './app-fixes.js', './manifest.webmanifest', './assets/icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
