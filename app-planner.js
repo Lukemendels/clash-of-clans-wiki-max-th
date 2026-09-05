@@ -120,13 +120,20 @@ function scheduleBuilders(builderChains,heroes,parsed,wall) {
       else if(t<ws && !fit.length){ lane.available=we+TEN_MIN; continue; }
     }
     const phase1Pending=pending.some(x=>x.c.kind==='builder' && x.c.tasks[x.i]?.phase===1);
+    const phase1Scheduled=lanes.some(l=>l.queue.some(q=>q.phase===1 && q.end>t));
+    const phase1Active=normalActive.some(a=>{
+      if(a.kind==='hero' || activeFinish(a)<=t) return false;
+      const e=state.data.byDataId.get(a.dataId);
+      return Boolean(e) && phaseFor(e,a.level===0)===1;
+    });
+    const phase1InProgress=phase1Pending || phase1Scheduled || phase1Active;
     const heroActiveAtT=lanes.some(l=>l.queue.at(-1)?.type==='hero' && l.queue.at(-1).end>t) || normalActive.some(a=>a.kind==='hero'&&activeFinish(a)>t);
-    candidates=candidates.filter(x=>!(x.c.kind==='hero' && phase1Pending && heroActiveAtT));
+    candidates=candidates.filter(x=>!(x.c.kind==='hero' && phase1InProgress && heroActiveAtT));
     if(!candidates.length){ lane.available+=10*60*1000; continue; }
     candidates.sort((a,b)=>{
       const ta=a.c.tasks[a.i],tb=b.c.tasks[b.i];
-      const pa=ta.type==='hero'?(phase1Pending?1500:1900):ta.priority;
-      const pb=tb.type==='hero'?(phase1Pending?1500:1900):tb.priority;
+      const pa=ta.type==='hero'?(phase1InProgress?1500:1900):ta.priority;
+      const pb=tb.type==='hero'?(phase1InProgress?1500:1900):tb.priority;
       if(pa!==pb)return pa-pb;
       return sleepFitScore(tb,t)-sleepFitScore(ta,t) || ta.duration-tb.duration;
     });
