@@ -27,6 +27,28 @@ function maxLevelAtTH(entity, th) {
     .map(level => Number(level.level) || 0));
 }
 
+// Hero upgrades are a parallel progression track, not Phase 1 work. During
+// Phase 1 the scheduler still limits heroes to one builder; after the actual
+// foundation is complete this lets hero saturation engage correctly.
+function heroChains(parsed) {
+  const th = parsed.th, chains = [];
+  for (const e of state.data.entities.filter(e => e._category === 'hero')) {
+    const target = maxLevelAtTH(e, th); if (!target) continue;
+    const current = (parsed.byDataId.get(Number(e.dataId)) || [])[0] || {level:0,timer:0,extra:false,instance:`hero:${e.dataId}:1`};
+    const tasks = [];
+    for (let level = Math.max(1, current.level + 1); level <= target; level++) {
+      const lr = levelRecord(e, level); if (!lr) continue;
+      tasks.push({
+        type:'hero', entity:e, chainId:`hero:${e.dataId}:1`, from:level-1, to:level,
+        phase:null, duration:applyBoost(durationMs(lr)), levelRecord:lr,
+        priority:1500 + metaRank(e.id, th) + level / 100
+      });
+    }
+    if (tasks.length) chains.push({id:`hero:${e.dataId}:1`,entity:e,current,tasks,kind:'hero'});
+  }
+  return chains;
+}
+
 function actionCountdown(start) {
   const delta = Math.max(0, Number(start || 0) - Date.now());
   return delta <= 60000 ? 'now' : `in ${fmtDuration(delta)}`;
