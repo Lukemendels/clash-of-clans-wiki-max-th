@@ -31,180 +31,71 @@
           <p>Max TH turns the current Home Village state into a war-optimized builder, laboratory, hero, pet, and wall plan.</p>
           <button class="primary-button" data-go="village">Import village</button>
         </div>
-
         <div id="dashboardContent" class="hidden">
           <div class="hero-summary card">
-            <div>
-              <div class="eyebrow" id="phaseLabel">Current phase</div>
-              <h1 id="phaseName">—</h1>
-              <p id="phaseDescription" class="muted">—</p>
-            </div>
-            <div class="phase-ring" id="phaseRing" aria-label="Phase completion">
-              <strong id="phasePercent">0%</strong>
-              <span>complete</span>
-            </div>
+            <div><div class="eyebrow" id="phaseLabel">Current phase</div><h1 id="phaseName">—</h1><p id="phaseDescription" class="muted">—</p></div>
+            <div class="phase-ring" id="phaseRing" aria-label="Phase completion"><strong id="phasePercent">0%</strong><span>complete</span></div>
           </div>
-
           <div class="progress-grid" id="progressGrid"></div>
-
-          <div class="section-heading">
-            <div>
-              <div class="eyebrow">Milestones</div>
-              <h2>When the tracks finish</h2>
-            </div>
-          </div>
+          <div class="section-heading"><div><div class="eyebrow">Milestones</div><h2>When the tracks finish</h2></div></div>
           <div class="milestone-grid" id="milestoneGrid"></div>
-
-          <div class="section-heading">
-            <div>
-              <div class="eyebrow">Right now</div>
-              <h2>Your workers</h2>
-            </div>
-            <span class="muted small" id="workerCount"></span>
-          </div>
+          <div class="section-heading"><div><div class="eyebrow">Right now</div><h2>Your workers</h2></div><span class="muted small" id="workerCount"></span></div>
           <div class="worker-list" id="workerList"></div>
         </div>
       </section>
 
       <section class="tab-panel" id="tab-plan" data-panel="plan">
-        <div class="section-heading sticky-title">
-          <div>
-            <div class="eyebrow">Upgrade path</div>
-            <h1>Plan</h1>
-          </div>
-        </div>
-        <div id="planEmpty" class="empty-card compact">
-          <p>Import a village to build your queues.</p>
-          <button class="primary-button" data-go="village">Import village</button>
-        </div>
+        <div class="section-heading sticky-title"><div><div class="eyebrow">Upgrade path</div><h1>Plan</h1></div></div>
+        <div id="planEmpty" class="empty-card compact"><p>Import a village to build your queues.</p><button class="primary-button" data-go="village">Import village</button></div>
         <div id="planContent" class="hidden">
           <div class="phase-stack" id="phaseStack"></div>
-          <div class="section-heading">
-            <div>
-              <div class="eyebrow">Queue preview</div>
-              <h2>What comes next</h2>
-            </div>
-          </div>
+          <div class="section-heading"><div><div class="eyebrow">Queue preview</div><h2>What comes next</h2></div></div>
           <div id="queuePreview" class="queue-preview"></div>
         </div>
       </section>
 
       <section class="tab-panel" id="tab-max" data-panel="max">
-        <div class="section-heading sticky-title">
-          <div>
-            <div class="eyebrow">Wiki, inverted</div>
-            <h1 id="maxTitle">Max by Town Hall</h1>
-          </div>
-        </div>
+        <div class="section-heading sticky-title"><div><div class="eyebrow">Wiki, inverted</div><h1 id="maxTitle">Max by Town Hall</h1></div></div>
         <div class="filter-row">
           <input id="maxSearch" class="text-input" type="search" placeholder="Search Dragon, Poison, X-Bow…" />
           <select id="maxCategory" class="select-input">
-            <option value="all">All</option>
-            <option value="army">Army</option>
-            <option value="resource">Economy</option>
-            <option value="defense">Defenses</option>
-            <option value="trap">Traps</option>
-            <option value="troop">Troops</option>
-            <option value="spell">Spells</option>
-            <option value="siege">Siege</option>
-            <option value="hero">Heroes</option>
-            <option value="pet">Pets</option>
-            <option value="wall">Walls</option>
+            <option value="all">All</option><option value="army">Army</option><option value="resource">Economy</option><option value="defense">Defenses</option><option value="trap">Traps</option><option value="troop">Troops</option><option value="spell">Spells</option><option value="siege">Siege</option><option value="hero">Heroes</option><option value="pet">Pets</option><option value="wall">Walls</option>
           </select>
         </div>
         <div id="maxList" class="max-list"></div>
       </section>
 
       <section class="tab-panel" id="tab-village" data-panel="village">
-        <div class="section-heading sticky-title">
-          <div>
-            <div class="eyebrow">Local-only state</div>
-            <h1>Village</h1>
-          </div>
-        </div>
-
+        <div class="section-heading sticky-title"><div><div class="eyebrow">Local-only state</div><h1>Village</h1></div></div>
         <div class="card import-card">
           <h2>Update from Clash of Clans</h2>
           <p class="muted">Use the in-game Data Export → Copy, then paste it here. Your export stays in this browser.</p>
           <textarea id="jsonInput" class="json-input" spellcheck="false" placeholder='{"tag":"#...","timestamp":...}'></textarea>
-          <div class="button-row">
-            <button class="secondary-button" id="pasteButton">Paste clipboard</button>
-            <button class="primary-button" id="importButton">Import & replan</button>
-          </div>
+          <div class="button-row"><button class="secondary-button" id="pasteButton">Paste clipboard</button><button class="primary-button" id="importButton">Import & replan</button></div>
           <div class="import-meta" id="importMeta"></div>
         </div>
-
         <div class="card settings-card">
-          <div class="card-heading">
-            <div>
-              <div class="eyebrow">Scheduler</div>
-              <h2>Daily rhythm</h2>
-            </div>
-          </div>
+          <div class="card-heading"><div><div class="eyebrow">Scheduler</div><h2>Daily rhythm</h2></div></div>
           <div class="settings-grid">
-            <label>
-              <span>Sleep starts</span>
-              <input id="sleepStart" type="time" value="23:00" />
-            </label>
-            <label>
-              <span>Wake time</span>
-              <input id="wakeTime" type="time" value="07:00" />
-            </label>
-            <label>
-              <span>Gold Pass boost</span>
-              <select id="goldPass">
-                <option value="0">Off</option>
-                <option value="10">10%</option>
-                <option value="15">15%</option>
-                <option value="20">20%</option>
-              </select>
-            </label>
-            <label class="check-label">
-              <input id="autoHelpers" type="checkbox" />
-              <span>Assume owned helpers are used whenever available</span>
-            </label>
+            <label><span>Sleep starts</span><input id="sleepStart" type="time" value="23:00" /></label>
+            <label><span>Wake time</span><input id="wakeTime" type="time" value="07:00" /></label>
+            <label><span>Gold Pass boost</span><select id="goldPass"><option value="0">Off</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option></select></label>
+            <label class="check-label"><input id="autoHelpers" type="checkbox" /><span>Assume owned helpers are used whenever available</span></label>
           </div>
         </div>
-
         <div class="card settings-card">
-          <div class="card-heading split">
-            <div>
-              <div class="eyebrow">Parallel track</div>
-              <h2>Wall grinding</h2>
-            </div>
-            <label class="switch-label"><input id="wallEnabled" type="checkbox" /><span>Enabled</span></label>
-          </div>
+          <div class="card-heading split"><div><div class="eyebrow">Parallel track</div><h2>Wall grinding</h2></div><label class="switch-label"><input id="wallEnabled" type="checkbox" /><span>Enabled</span></label></div>
           <div class="settings-grid" id="wallSettings">
-            <label>
-              <span>Session starts</span>
-              <input id="wallStart" type="time" value="19:00" />
-            </label>
-            <label>
-              <span>Minutes/session</span>
-              <input id="wallMinutes" type="number" min="15" max="240" step="15" value="60" />
-            </label>
-            <label>
-              <span>Gold per base</span>
-              <input id="wallGold" type="number" min="0" step="50000" value="300000" />
-            </label>
-            <label>
-              <span>Elixir per base</span>
-              <input id="wallElixir" type="number" min="0" step="50000" value="300000" />
-            </label>
+            <label><span>Session starts</span><input id="wallStart" type="time" value="19:00" /></label>
+            <label><span>Minutes/session</span><input id="wallMinutes" type="number" min="15" max="240" step="15" value="60" /></label>
+            <label><span>Gold per base</span><input id="wallGold" type="number" min="0" step="50000" value="300000" /></label>
+            <label><span>Elixir per base</span><input id="wallElixir" type="number" min="0" step="50000" value="300000" /></label>
           </div>
           <p class="muted small">Model: 1:00 search + 0:30 scout + 3:00 attack + 0:30 wall dump = one 5-minute farming cycle.</p>
         </div>
-
         <div class="card settings-card">
           <div class="card-heading"><h2>Planner rules</h2></div>
-          <ul class="rule-list">
-            <li>Home Village only.</li>
-            <li>Resources are assumed available; storage capacity is the only resource constraint.</li>
-            <li>Next upgrades start 10 minutes after completion, or 10 minutes after waking if they finish during sleep.</li>
-            <li>Phase 1 uses one hero builder lane; after Phase 1, available heroes saturate builders.</li>
-            <li>Temporary <code>extra:true</code> Goblin Builder work is honored only for the imported active task.</li>
-            <li>Hero equipment and Supercharges do not gate Town Hall readiness.</li>
-          </ul>
+          <ul class="rule-list"><li>Home Village only.</li><li>Resources are assumed available; storage capacity is the only resource constraint.</li><li>Next upgrades start 10 minutes after completion, or 10 minutes after waking if they finish during sleep.</li><li>Phase 1 uses one hero builder lane; after Phase 1, available heroes saturate builders.</li><li>Temporary <code>extra:true</code> Goblin Builder work is honored only for the imported active task.</li><li>Hero equipment and Supercharges do not gate Town Hall readiness.</li></ul>
           <button class="danger-button" id="resetButton">Forget this village</button>
         </div>
       </section>
@@ -218,6 +109,8 @@
     </nav>
   </div>
   <div class="toast" id="toast" role="status"></div>
-  <script type="module" src="./app.js"></script>
+  <script src="./app-data.js"></script>
+  <script src="./app-planner.js"></script>
+  <script src="./app-ui.js"></script>
 </body>
 </html>
