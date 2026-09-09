@@ -14,7 +14,7 @@ A local-first Clash of Clans Home Village planner organized around one question:
   1. **Offensive Foundation** — make the TH base legal; max attack-enabling buildings; leave newly placed defenses at level 1.
   2. **Economy & Passive HP** — max storages and collectors while offense continues progressing.
   3. **Traps & Teslas** — traps first, Hidden Teslas last.
-  4. **Defensive Completion** — ordinary defenses first, inferred high-war-weight/signature defenses last.
+  4. **Defensive Completion** — add defensive war weight where it buys the most anti-meta value first; defer low-impact defenses and signature weapons. At TH9 the explicit order is Air Defense → Air Sweeper → Archer Tower → Bomb Tower → Wizard Tower → Cannon → Mortar → X-Bow.
 - Uses one hero builder lane during Phase 1, then saturates available heroes once Phase 1 is complete.
 - Prioritizes laboratory upgrades using a Town Hall-specific war-meta profile (Dragons/Balloons and other commonly useful war troops ahead of low-value research).
 - Adds a 10-minute human-action buffer after upgrades and waits until wake time + 10 minutes when an upgrade finishes during the configured sleep window.
@@ -56,7 +56,7 @@ This repository is a static site. To publish it, enable GitHub Pages for the rep
 The scheduler is intentionally explicit rather than pretending to know Supercell's private matchmaking coefficients:
 
 - Farming resources are treated as available; storage capacity is the only resource constraint intended to block an upgrade.
-- Defensive priority is a transparent low-war-weight heuristic, not a numerical “war weight” claim.
+- Defensive priority is a transparent war-efficiency heuristic: prioritize anti-meta DPS/control per added defensive weight rather than claiming a numerical Supercell “war weight” formula.
 - An imported active timer is authoritative. Future times are projections until a new export confirms completion.
 - Temporary Goblin Builder capacity is never projected beyond the imported `extra:true` task.
 - Gold Pass reductions apply to future projected durations; active timers already contain their real remaining time.
