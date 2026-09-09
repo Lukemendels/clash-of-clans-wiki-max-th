@@ -10,10 +10,12 @@ function buildUpgradeChains(parsed) {
       const isNew=inst.level===0; const tasks=[];
       for(let level=inst.level+1; level<=target; level++) {
         const lr=levelRecord(e,level); if(!lr) continue;
+        const phase=phaseFor(e,isNew && level===1);
+        const withinPhase=e.id==='hidden-tesla'?900:(e._category==='defense'?defenseRank(e.id)*40:0);
         tasks.push({
           type:'builder', entity:e, chainId:`builder:${e.dataId}:${index}`, instanceIndex:index, from:level-1,to:level,
-          phase:phaseFor(e,isNew && level===1), duration:applyBoost(durationMs(lr)), levelRecord:lr,
-          priority: phaseFor(e,isNew && level===1)*1000 + (e.id==='hidden-tesla'?900:defenseRank(e.id)*10) + level
+          phase, duration:applyBoost(durationMs(lr)), levelRecord:lr,
+          priority: phase*1000 + withinPhase + level
         });
       }
       if(tasks.length) chains.push({id:`builder:${e.dataId}:${index}`,entity:e,current:inst,tasks,kind:'builder'});
