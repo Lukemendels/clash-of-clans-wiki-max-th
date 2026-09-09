@@ -27,6 +27,27 @@ function maxLevelAtTH(entity, th) {
     .map(level => Number(level.level) || 0));
 }
 
+// Clash exports keep the pre-upgrade level on a record while timer > 0. The
+// matching current -> current+1 task is already underway and must not be put
+// back into a future queue.
+function withoutImportedActiveStep(chains) {
+  return chains.map(chain => {
+    if (Number(chain.current?.timer || 0) > 0) {
+      const from = Number(chain.current?.level || 0);
+      const to = from + 1;
+      chain.tasks = chain.tasks.filter(task => !(Number(task.from) === from && Number(task.to) === to));
+    }
+    return chain;
+  }).filter(chain => chain.tasks.length);
+}
+
+const coreBuildUpgradeChains = window.buildUpgradeChains;
+const coreLabChains = window.labChains;
+const corePetChains = window.petChains;
+window.buildUpgradeChains = parsed => withoutImportedActiveStep(coreBuildUpgradeChains(parsed));
+window.labChains = parsed => withoutImportedActiveStep(coreLabChains(parsed));
+window.petChains = parsed => withoutImportedActiveStep(corePetChains(parsed));
+
 // Hero upgrades are a parallel progression track, not Phase 1 work. During
 // Phase 1 the scheduler still limits heroes to one builder; after the actual
 // foundation is complete this lets hero saturation engage correctly.
@@ -35,8 +56,9 @@ function heroChains(parsed) {
   for (const e of state.data.entities.filter(e => e._category === 'hero')) {
     const target = maxLevelAtTH(e, th); if (!target) continue;
     const current = (parsed.byDataId.get(Number(e.dataId)) || [])[0] || {level:0,timer:0,extra:false,instance:`hero:${e.dataId}:1`};
+    const activeStep = Number(current.timer || 0) > 0 ? 1 : 0;
     const tasks = [];
-    for (let level = Math.max(1, current.level + 1); level <= target; level++) {
+    for (let level = Math.max(1, current.level + 1 + activeStep); level <= target; level++) {
       const lr = levelRecord(e, level); if (!lr) continue;
       tasks.push({
         type:'hero', entity:e, chainId:`hero:${e.dataId}:1`, from:level-1, to:level,
