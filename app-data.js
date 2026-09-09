@@ -26,9 +26,13 @@ const CATEGORY_BY_FOLDER = {
 
 const OFFENSIVE_BUILDINGS = new Set(['army-camp','barracks','blacksmith','clan-castle','dark-barracks','dark-spell-factory','hero-banner','hero-hall','laboratory','pet-house','spell-factory','workshop']);
 const ECONOMY_BUILDINGS = new Set(['dark-elixir-drill','dark-elixir-storage','elixir-collector','elixir-storage','gold-mine','gold-storage']);
+// Phase 4 is ordered for war efficiency rather than raw completion speed: add the
+// defenses that contribute the most against relevant attacks before taking on low-impact
+// defensive weight. At TH9 this yields AD -> Sweeper -> AT -> Bomb Tower -> Wizard Tower
+// -> Cannon -> Mortar -> X-Bow. Traps and Hidden Teslas remain in Phase 3.
 const DEFENSE_PRIORITY = [
-  'mortar','wizard-tower','bomb-tower','cannon','archer-tower','air-sweeper','air-defense','builders-hut',
-  'x-bow','inferno-tower','eagle-artillery','scattershot','spell-tower','monolith','ricochet-cannon','multi-archer-tower',
+  'air-defense','air-sweeper','archer-tower','bomb-tower','wizard-tower','cannon','mortar','x-bow',
+  'builders-hut','inferno-tower','eagle-artillery','scattershot','spell-tower','monolith','ricochet-cannon','multi-archer-tower',
   'multi-gear-tower','firespitter','super-wizard-tower','revenge-tower','crafting-station'
 ];
 
@@ -177,7 +181,7 @@ function phaseDescription(n) { return ({
   1:'Build a legal base and max attack-enabling infrastructure while one builder stays on heroes.',
   2:'Max storages and collectors while heroes and research keep pulling offense ahead.',
   3:'Take the cheap defensive value first: traps, then Hidden Teslas.',
-  4:'Finish defenses from lighter inferred war weight toward signature defenses.'
+  4:'Add defensive war weight where it buys the most anti-meta value first; defer low-impact defenses and signature weapons.'
 }[n]||'Permanent progression at this Town Hall is complete.'); }
 function defenseRank(id) { const i=DEFENSE_PRIORITY.indexOf(id); return i<0?DEFENSE_PRIORITY.length:i; }
 function metaRank(id,th) { const m=META[th]||META[Math.max(...Object.keys(META).map(Number).filter(x=>x<=th))]||[]; const i=m.indexOf(id); return i<0?1000:i; }
